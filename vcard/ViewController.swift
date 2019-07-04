@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     var handle: AuthStateDidChangeListenerHandle?
     var errorLabel: UILabel!
     var ref: DatabaseReference!
+    weak var delegate: passUserDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,7 +132,7 @@ class ViewController: UIViewController {
                     self.registerButton.backgroundColor = .white
                     self.errorLabel.text = ""
                     //BRING UP NEW VIEW
-                    print("Registered")
+                    self.presentMainView(id: (authResult?.user.uid)!)
                 }
             }
         }
@@ -151,10 +152,10 @@ class ViewController: UIViewController {
                     self!.errorLabel.text = "Problem logging in - email or password may be incorrect"
                 }
                 else {
-                    self!.registerButton.backgroundColor = .white
+                    self!.loginButton.backgroundColor = .white
                     self!.errorLabel.text = ""
                     //Bring up New View
-                    print("Logged In")
+                    self!.presentMainView(id: (user?.user.uid)!)
                 }
             }
         }
@@ -162,6 +163,13 @@ class ViewController: UIViewController {
             self.loginButton.backgroundColor = .lightGray
             self.errorLabel.text = "Please fill out username and password fields"
         }
+    }
+    
+    func presentMainView(id: String) {
+        let mainViewController = MainViewController()
+        delegate = mainViewController
+        present(mainViewController, animated: true, completion: nil)
+        delegate?.passUser(id: id)
     }
 }
 
