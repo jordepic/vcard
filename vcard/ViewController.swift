@@ -108,7 +108,9 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         // EVENTUALLY MAKE IT TO DETECT WHEN LOGGED IN AND SKIP SCREEN
         handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-            
+            if let user = user {
+                self.presentMainView(id: user.uid)
+            }
         }
         // [END auth_listener]
     }

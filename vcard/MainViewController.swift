@@ -68,13 +68,14 @@ class MainViewController: UIViewController {
         
         companyImageView.image = UIImage(named: "company")
         companyImageView.clipsToBounds = true
-        companyImageView.contentMode = .scaleAspectFit
+        //companyImageView.contentMode = .scaleAspectFit
         
         editButton.setTitle("Edit", for: .normal)
         editButton.setTitleColor(.white, for: .normal)
         editButton.addTarget(self, action: #selector(editOrSave), for: .touchUpInside)
         editButton.backgroundColor = .blue
         editButton.layer.cornerRadius = editButton.frame.width/2
+        editButton.clipsToBounds = true
         
         //Need to figure out how to round images and buttons
         //Figure out excact layout that I want to pursue
