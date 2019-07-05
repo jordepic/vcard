@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		C11B9152598CEEB159F55481 /* Pods_vcard.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91402DBE5A0B62B40BA40C1B /* Pods_vcard.framework */; };
 		DAAF1A6A22CD1DC600EA39CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAF1A6922CD1DC600EA39CA /* AppDelegate.swift */; };
-		DAAF1A6C22CD1DC600EA39CA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAF1A6B22CD1DC600EA39CA /* ViewController.swift */; };
+		DAAF1A6C22CD1DC600EA39CA /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAF1A6B22CD1DC600EA39CA /* AuthenticationViewController.swift */; };
 		DAAF1A6F22CD1DC600EA39CA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAAF1A6D22CD1DC600EA39CA /* Main.storyboard */; };
 		DAAF1A7122CD1DC900EA39CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DAAF1A7022CD1DC900EA39CA /* Assets.xcassets */; };
 		DAAF1A7422CD1DC900EA39CA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DAAF1A7222CD1DC900EA39CA /* LaunchScreen.storyboard */; };
@@ -23,7 +23,7 @@
 		C99A1611F878E91D44855A01 /* Pods-vcard.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-vcard.debug.xcconfig"; path = "Target Support Files/Pods-vcard/Pods-vcard.debug.xcconfig"; sourceTree = "<group>"; };
 		DAAF1A6622CD1DC600EA39CA /* vcard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vcard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAF1A6922CD1DC600EA39CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		DAAF1A6B22CD1DC600EA39CA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		DAAF1A6B22CD1DC600EA39CA /* AuthenticationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationViewController.swift; sourceTree = "<group>"; };
 		DAAF1A6E22CD1DC600EA39CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		DAAF1A7022CD1DC900EA39CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DAAF1A7322CD1DC900EA39CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				DAAF1A6922CD1DC600EA39CA /* AppDelegate.swift */,
-				DAAF1A6B22CD1DC600EA39CA /* ViewController.swift */,
+				DAAF1A6B22CD1DC600EA39CA /* AuthenticationViewController.swift */,
 				DAB9E03F22CE56FF0045D9CA /* MainViewController.swift */,
 				DAAF1A6D22CD1DC600EA39CA /* Main.storyboard */,
 				DAAF1A7022CD1DC900EA39CA /* Assets.xcassets */,
@@ -211,7 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DAB9E04022CE56FF0045D9CA /* MainViewController.swift in Sources */,
-				DAAF1A6C22CD1DC600EA39CA /* ViewController.swift in Sources */,
+				DAAF1A6C22CD1DC600EA39CA /* AuthenticationViewController.swift in Sources */,
 				DAAF1A6A22CD1DC600EA39CA /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

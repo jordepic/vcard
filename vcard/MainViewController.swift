@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseDatabase
 import Firebase
+import FirebaseAuth
 
 protocol passUserDelegate: class {
     func passUser(id: String)
@@ -24,13 +25,14 @@ class MainViewController: UIViewController {
     var phoneTextView: UITextView!
     var companyImageView: UIImageView!
     var jobTitleTextView: UITextView!
-    var editButton: UIButton!
+    var editButton: UIBarButtonItem!
     var currentlyEditing: Bool!
+    var handle: AuthStateDidChangeListenerHandle?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "VCard"
+        title = "My Card"
         view.backgroundColor = .white
         
         currentlyEditing = false
@@ -41,7 +43,7 @@ class MainViewController: UIViewController {
         phoneTextView = UITextView()
         companyImageView = UIImageView()
         jobTitleTextView = UITextView()
-        editButton = UIButton()
+        editButton = UIBarButtonItem()
         
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         nameTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +51,6 @@ class MainViewController: UIViewController {
         phoneTextView.translatesAutoresizingMaskIntoConstraints = false
         companyImageView.translatesAutoresizingMaskIntoConstraints = false
         jobTitleTextView.translatesAutoresizingMaskIntoConstraints = false
-        editButton.translatesAutoresizingMaskIntoConstraints = false
         
         nameTextView.isEditable = false
         emailTextView.isEditable = false
@@ -64,23 +65,22 @@ class MainViewController: UIViewController {
         profileImageView.image = UIImage(named: "default")
         profileImageView.clipsToBounds = true
         profileImageView.contentMode = .scaleAspectFit
-        profileImageView.layer.cornerRadius = profileImageView.frame.width/2
+        //profileImageView.layer.cornerRadius = profileImageView.frame.width/2
         
         companyImageView.image = UIImage(named: "company")
         companyImageView.clipsToBounds = true
-        //companyImageView.contentMode = .scaleAspectFit
-        
-        editButton.setTitle("Edit", for: .normal)
-        editButton.setTitleColor(.white, for: .normal)
-        editButton.addTarget(self, action: #selector(editOrSave), for: .touchUpInside)
-        editButton.backgroundColor = .blue
-        editButton.layer.cornerRadius = editButton.frame.width/2
-        editButton.clipsToBounds = true
+        companyImageView.contentMode = .scaleAspectFit
         
         //Need to figure out how to round images and buttons
         //Figure out excact layout that I want to pursue
         //Will also have to set up a navigation bar/title, figure out
         //whether to use navigation or modal view controller
+        
+        editButton.title = "Edit"
+        editButton.target = self
+        editButton.action = #selector(editOrSave)
+        editButton.style = .plain
+        self.navigationItem.rightBarButtonItem = editButton
         
         nameTextView.textAlignment = .center
         emailTextView.textAlignment = .center
@@ -93,12 +93,23 @@ class MainViewController: UIViewController {
         view.addSubview(phoneTextView)
         view.addSubview(companyImageView)
         view.addSubview(jobTitleTextView)
-        view.addSubview(editButton)
         
         setupConstraints()
     }
     
-
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
+            if let user = user {
+                self.uid = user.uid
+            }
+            else {
+                let authenticationViewController = AuthenticationViewController()
+                self.present(authenticationViewController, animated: true, completion: nil)
+            }
+        }
+    }
+    
     func setupConstraints() {
         NSLayoutConstraint.activate([
             profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
@@ -136,12 +147,7 @@ class MainViewController: UIViewController {
             jobTitleTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             jobTitleTextView.heightAnchor.constraint(equalToConstant: 24)
             ])
-        NSLayoutConstraint.activate([
-            editButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32),
-            editButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
-            editButton.widthAnchor.constraint(equalToConstant: 64),
-            editButton.heightAnchor.constraint(equalToConstant: 64)
-            ])
+        
         
     }
     

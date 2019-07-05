@@ -11,7 +11,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseDatabase
 
-class ViewController: UIViewController {
+class AuthenticationViewController: UIViewController {
     
     var emailTextField: UITextField!
     var passwordTextField: UITextField!
@@ -104,17 +104,6 @@ class ViewController: UIViewController {
         
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // EVENTUALLY MAKE IT TO DETECT WHEN LOGGED IN AND SKIP SCREEN
-        handle = Auth.auth().addStateDidChangeListener { (auth, user) in
-            if let user = user {
-                self.presentMainView(id: user.uid)
-            }
-        }
-        // [END auth_listener]
-    }
-    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         Auth.auth().removeStateDidChangeListener(handle!)
@@ -170,7 +159,7 @@ class ViewController: UIViewController {
     func presentMainView(id: String) {
         let mainViewController = MainViewController()
         delegate = mainViewController
-        present(mainViewController, animated: true, completion: nil)
+        dismiss(animated: true, completion: nil)
         delegate?.passUser(id: id)
     }
 }
