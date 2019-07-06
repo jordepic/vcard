@@ -10,6 +10,7 @@ import UIKit
 import FirebaseDatabase
 import Firebase
 import FirebaseAuth
+import SideMenu
 
 protocol passUserDelegate: class {
     func passUser(id: String)
@@ -26,6 +27,7 @@ class MainViewController: UIViewController {
     var companyImageView: UIImageView!
     var jobTitleTextView: UITextView!
     var editButton: UIBarButtonItem!
+    var menuButton: UIBarButtonItem!
     var currentlyEditing: Bool!
     var handle: AuthStateDidChangeListenerHandle?
     
@@ -44,7 +46,8 @@ class MainViewController: UIViewController {
         companyImageView = UIImageView()
         jobTitleTextView = UITextView()
         editButton = UIBarButtonItem()
-        
+        menuButton = UIBarButtonItem()
+
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         nameTextView.translatesAutoresizingMaskIntoConstraints = false
         emailTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -82,10 +85,20 @@ class MainViewController: UIViewController {
         editButton.style = .plain
         self.navigationItem.rightBarButtonItem = editButton
         
+        menuButton.target = self
+        menuButton.action = #selector(toggleMenu)
+        //menuButton.image = UIImage(named: "menu")
+        menuButton.title = "Menu"
+        self.navigationItem.leftBarButtonItem = menuButton
+        
         nameTextView.textAlignment = .center
         emailTextView.textAlignment = .center
         phoneTextView.textAlignment = .center
         jobTitleTextView.textAlignment = .center
+        
+        let menuLeftNavigationController = UISideMenuNavigationController(rootViewController: SideViewController())
+        SideMenuManager.default.menuLeftNavigationController = menuLeftNavigationController
+        SideMenuManager.default.menuFadeStatusBar = false
         
         view.addSubview(profileImageView)
         view.addSubview(nameTextView)
@@ -147,8 +160,10 @@ class MainViewController: UIViewController {
             jobTitleTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             jobTitleTextView.heightAnchor.constraint(equalToConstant: 24)
             ])
-        
-        
+    }
+    
+    @objc func toggleMenu(){
+        present(SideMenuManager.default.menuLeftNavigationController!, animated: true, completion: nil)
     }
     
     @objc func editOrSave() {
