@@ -62,7 +62,6 @@ extension SideViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = sideTableView.cellForRow(at: indexPath) as! SideTableViewCell
         dismiss(animated: true, completion: nil)
-        print("Selected")
         
         if cell.textView.text == "My Card" {
             

@@ -24,6 +24,7 @@ class SideTableViewCell: UITableViewCell {
         textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = false
+        textView.font = UIFont(name: "Arial", size: 17)
         contentView.addSubview(textView)
         
         setupConstraints()
