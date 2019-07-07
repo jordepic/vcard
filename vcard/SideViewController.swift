@@ -24,6 +24,8 @@ class SideViewController: UIViewController {
         sideTableView = UITableView()
         sideTableView.translatesAutoresizingMaskIntoConstraints = false
         sideTableView.dataSource = self
+        sideTableView.delegate = self
+        sideTableView.register(SideTableViewCell.self, forCellReuseIdentifier: reuseIdentifier)
         view.addSubview(sideTableView)
         
         setupConstraints()
@@ -37,18 +39,6 @@ class SideViewController: UIViewController {
             sideTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 extension SideViewController: UITableViewDataSource {
@@ -57,14 +47,17 @@ extension SideViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
+        let cell = sideTableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! SideTableViewCell
+        let option = options[indexPath.row]
+        cell.configure(option: option)
+        return cell
     }
     
 }
 
 extension SideViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 40
+        return 64
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         

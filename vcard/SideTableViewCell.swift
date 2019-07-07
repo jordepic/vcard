@@ -22,6 +22,8 @@ class SideTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.isEditable = false
         contentView.addSubview(textView)
         
         setupConstraints()
@@ -32,7 +34,8 @@ class SideTableViewCell: UITableViewCell {
             textView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 8),
             textView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -8),
             textView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-            textView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)])
+            textView.heightAnchor.constraint(equalToConstant: 48)
+        ])
     }
     
     func configure(option: String) {
