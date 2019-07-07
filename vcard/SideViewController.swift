@@ -19,7 +19,7 @@ class SideViewController: UIViewController {
         
         view.backgroundColor = .white
         // Do any additional setup after loading the view.
-        options = ["My card", "My code", "Scan Code", "Contacts", "Log Out"]
+        options = ["My Card", "My Code", "Scan Code", "Contacts", "Log Out"]
         
         sideTableView = UITableView()
         sideTableView.translatesAutoresizingMaskIntoConstraints = false
@@ -60,6 +60,25 @@ extension SideViewController: UITableViewDelegate {
         return 64
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = sideTableView.cellForRow(at: indexPath) as! SideTableViewCell
+        dismiss(animated: true, completion: nil)
+        print("Selected")
+        
+        if cell.textView.text == "My Card" {
+            
+        }
+        else if cell.textView.text == "My Code" {
+            
+        }
+        else if cell.textView.text == "Scan Code" {
+            
+        }
+        else if cell.textView.text == "Contacts" {
+            
+        }
+        else if cell.textView.text == "Log Out" {
+            
+        }
         
     }
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
