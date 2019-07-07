@@ -17,7 +17,6 @@ class AuthenticationViewController: UIViewController {
     var passwordTextField: UITextField!
     var registerButton: UIButton!
     var loginButton: UIButton!
-    var handle: AuthStateDidChangeListenerHandle?
     var errorLabel: UILabel!
     var ref: DatabaseReference!
     weak var delegate: passUserDelegate?
@@ -106,14 +105,13 @@ class AuthenticationViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        Auth.auth().removeStateDidChangeListener(handle!)
     }
     
     @objc func register () {
         if emailTextField.text != "", passwordTextField.text != "" {
             Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { authResult, error in
                 if let user = authResult?.user {
-                    self.ref.child("users/\(user.uid)").setValue(true)
+                    self.ref.child("users/\(user.uid)").setValue(["Name": "Name", "Email": "Email", "Phone": "Phone", "Job Description": "Job Description"])
                 }
                 if error != nil{
                     self.registerButton.backgroundColor = .lightGray

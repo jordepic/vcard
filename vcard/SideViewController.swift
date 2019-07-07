@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SideViewController: UIViewController {
     
@@ -76,7 +77,16 @@ extension SideViewController: UITableViewDelegate {
             
         }
         else if cell.textView.text == "Log Out" {
-            
+            let firebaseAuth = Auth.auth()
+            do {
+                try firebaseAuth.signOut()
+            } catch let signOutError as NSError {
+                print ("Error signing out: %@", signOutError)
+            }
+            let authenticationViewController = AuthenticationViewController()
+            let mainViewController = MainViewController()
+            //THIS COULD CAUSE ISSUES LATER ON, LOOK INTO IT
+            mainViewController.present(authenticationViewController, animated: true, completion: nil)
         }
         
     }
