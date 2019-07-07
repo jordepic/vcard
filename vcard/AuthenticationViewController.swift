@@ -112,6 +112,7 @@ class AuthenticationViewController: UIViewController {
             Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { authResult, error in
                 if let user = authResult?.user {
                     self.ref.child("users/\(user.uid)").setValue(["Name": "Name", "Email": "Email", "Phone": "Phone", "Job Description": "Job Description"])
+                    self.ref.child("contacts/\(user.uid)").setValue(true)
                 }
                 if error != nil{
                     self.registerButton.backgroundColor = .lightGray

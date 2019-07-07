@@ -30,6 +30,7 @@ class MainViewController: UIViewController {
     var menuButton: UIBarButtonItem!
     var currentlyEditing: Bool!
     var handle: AuthStateDidChangeListenerHandle?
+    var ref: DatabaseReference!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +39,7 @@ class MainViewController: UIViewController {
         view.backgroundColor = .white
         
         currentlyEditing = false
+        ref = Database.database().reference()
         
         profileImageView = UIImageView()
         nameTextView = UITextView()
@@ -167,16 +169,36 @@ class MainViewController: UIViewController {
     }
     
     @objc func editOrSave() {
-        if currentlyEditing {
-            
+        currentlyEditing.toggle()
+        if editButton.title == "Edit"{
+            editButton.title = "Save"
         }
         else {
-            
+            editButton.title = "Edit"
+        }
+        if currentlyEditing {
+            jobTitleTextView.isEditable = true
+            nameTextView.isEditable = true
+            emailTextView.isEditable = true
+            phoneTextView.isEditable = true
+        }
+        else {
+            self.ref.child("users/\(uid!)").setValue(["Name": nameTextView.text, "Email": emailTextView.text, "Phone": phoneTextView.text, "Job Description": jobTitleTextView.text])
+            retrieveInfo()
         }
     }
     
-    func retreiveInfo() {
-        
+    func retrieveInfo() {
+        ref.child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+            // Get user value
+            let value = snapshot.value as! NSDictionary
+            self.nameTextView.text = (value["Name"] as! String)
+            self.emailTextView.text = (value["Email"] as! String)
+            self.jobTitleTextView.text = (value["Job Description"] as! String)
+            self.phoneTextView.text = (value["Phone"] as! String)
+        }) { (error) in
+            print(error.localizedDescription)
+        }
     }
 
 }
