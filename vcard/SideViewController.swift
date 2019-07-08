@@ -80,27 +80,29 @@ extension SideViewController: UITableViewDelegate {
         let cell = sideTableView.cellForRow(at: indexPath) as! SideTableViewCell
         let top = topMostController()
         let qrViewController = QRViewController()
-        let mainViewController = MainViewController()
+//        let mainViewController = MainViewController()
         let authViewController = AuthenticationViewController()
-        let contactsViewController = ContactsViewController()
-        let scanViewController = ScanViewController()
+//        let contactsViewController = ContactsViewController()
+//        let scanViewController = ScanViewController()
+        
         
         if cell.textView.text == "My Card" {
-            top.present(mainViewController, animated: true, completion: nil)
+
         }
         else if cell.textView.text == "My Code" {
-            top.present(qrViewController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(qrViewController, animated: true)
         }
         else if cell.textView.text == "Scan Code" {
-            top.present(scanViewController, animated: true, completion: nil)
+
         }
         else if cell.textView.text == "Contacts" {
-            top.present(contactsViewController, animated: true, completion: nil)
+
         }
         else if cell.textView.text == "Log Out" {
             signOut()
             top.present(authViewController, animated: true, completion: nil)
         }
+        
         
     }
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {

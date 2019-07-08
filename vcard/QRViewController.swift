@@ -20,7 +20,7 @@ class QRViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .white
-        title = "My Card"
+        title = "My Code"
         
         uid = Auth.auth().currentUser?.uid
         
@@ -33,9 +33,12 @@ class QRViewController: UIViewController {
         
         qr = UIImageView()
         qr.translatesAutoresizingMaskIntoConstraints = false
+        print(uid!)
         if let image = generateQRCode(from: uid){
             qr.image = image
         }
+        qr.clipsToBounds = true
+        qr.contentMode = .scaleAspectFit
         view.addSubview(qr)
         
         setupConstraints()
@@ -45,7 +48,12 @@ class QRViewController: UIViewController {
     }
     
     func setupConstraints() {
-        
+        NSLayoutConstraint.activate([
+            qr.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            qr.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            qr.widthAnchor.constraint(equalToConstant: view.frame.width/2),
+            qr.heightAnchor.constraint(equalToConstant: view.frame.width/2)
+            ])
     }
     
     @objc func toggleMenu(){

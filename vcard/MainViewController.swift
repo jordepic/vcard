@@ -116,7 +116,6 @@ class MainViewController: UIViewController {
         handle = Auth.auth().addStateDidChangeListener { (auth, user) in
             if let user = user {
                 self.uid = user.uid
-                print("will appear")
                 self.retrieveInfo()
             }
             else {
