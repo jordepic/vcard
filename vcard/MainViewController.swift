@@ -28,7 +28,7 @@ class MainViewController: UIViewController {
     var jobTitleTextView: UITextView!
     var editButton: UIBarButtonItem!
     var menuButton: UIBarButtonItem!
-    var currentlyEditing: Bool!
+    var currentlyEditing = false
     var handle: AuthStateDidChangeListenerHandle?
     var ref: DatabaseReference!
     
@@ -38,7 +38,6 @@ class MainViewController: UIViewController {
         title = "My Card"
         view.backgroundColor = .white
         
-        currentlyEditing = false
         ref = Database.database().reference()
         
         profileImageView = UIImageView()
@@ -117,6 +116,8 @@ class MainViewController: UIViewController {
         handle = Auth.auth().addStateDidChangeListener { (auth, user) in
             if let user = user {
                 self.uid = user.uid
+                print("will appear")
+                self.retrieveInfo()
             }
             else {
                 let authenticationViewController = AuthenticationViewController()
@@ -175,6 +176,10 @@ class MainViewController: UIViewController {
         }
         else {
             editButton.title = "Edit"
+            jobTitleTextView.isEditable = false
+            nameTextView.isEditable = false
+            emailTextView.isEditable = false
+            phoneTextView.isEditable = false
         }
         if currentlyEditing {
             jobTitleTextView.isEditable = true
@@ -189,13 +194,13 @@ class MainViewController: UIViewController {
     }
     
     func retrieveInfo() {
-        ref.child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
+        ref.child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
-            let value = snapshot.value as! NSDictionary
-            self.nameTextView.text = (value["Name"] as! String)
-            self.emailTextView.text = (value["Email"] as! String)
-            self.jobTitleTextView.text = (value["Job Description"] as! String)
-            self.phoneTextView.text = (value["Phone"] as! String)
+            let value = snapshot.value as? NSDictionary
+            self.nameTextView.text = (value?["Name"] as? String ?? "")
+            self.emailTextView.text = (value?["Email"] as? String ?? "")
+            self.jobTitleTextView.text = (value?["Job Description"] as? String ?? "")
+            self.phoneTextView.text = (value?["Phone"] as? String ?? "")
         }) { (error) in
             print(error.localizedDescription)
         }

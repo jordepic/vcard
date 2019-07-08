@@ -40,6 +40,14 @@ class SideViewController: UIViewController {
             sideTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
     }
+    
+    func topMostController() -> UIViewController {
+        var topController: UIViewController = UIApplication.shared.keyWindow!.rootViewController!
+        while (topController.presentedViewController != nil) {
+            topController = topController.presentedViewController!
+        }
+        return topController
+    }
 }
 
 extension SideViewController: UITableViewDataSource {
@@ -53,6 +61,14 @@ extension SideViewController: UITableViewDataSource {
         cell.configure(option: option)
         return cell
     }
+    func signOut(){
+        let firebaseAuth = Auth.auth()
+        do {
+            try firebaseAuth.signOut()
+        } catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
+        }
+    }
     
 }
 
@@ -62,31 +78,28 @@ extension SideViewController: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = sideTableView.cellForRow(at: indexPath) as! SideTableViewCell
-        dismiss(animated: true, completion: nil)
+        let top = topMostController()
+        let qrViewController = QRViewController()
+        let mainViewController = MainViewController()
+        let authViewController = AuthenticationViewController()
+        let contactsViewController = ContactsViewController()
+        let scanViewController = ScanViewController()
         
         if cell.textView.text == "My Card" {
-            
+            top.present(mainViewController, animated: true, completion: nil)
         }
         else if cell.textView.text == "My Code" {
-            
+            top.present(qrViewController, animated: true, completion: nil)
         }
         else if cell.textView.text == "Scan Code" {
-            
+            top.present(scanViewController, animated: true, completion: nil)
         }
         else if cell.textView.text == "Contacts" {
-            
+            top.present(contactsViewController, animated: true, completion: nil)
         }
         else if cell.textView.text == "Log Out" {
-            let firebaseAuth = Auth.auth()
-            do {
-                try firebaseAuth.signOut()
-            } catch let signOutError as NSError {
-                print ("Error signing out: %@", signOutError)
-            }
-            let authenticationViewController = AuthenticationViewController()
-            let mainViewController = MainViewController()
-            //THIS COULD CAUSE ISSUES LATER ON, LOOK INTO IT
-            mainViewController.present(authenticationViewController, animated: true, completion: nil)
+            signOut()
+            top.present(authViewController, animated: true, completion: nil)
         }
         
     }
