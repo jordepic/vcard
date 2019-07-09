@@ -16,7 +16,7 @@ protocol passUserDelegate: class {
     func passUser(id: String)
 }
 
-class MainViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MainViewController: UIViewController, UINavigationControllerDelegate {
     
     var uid: String!
     
@@ -31,7 +31,11 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     var currentlyEditing = false
     var handle: AuthStateDidChangeListenerHandle?
     var ref: DatabaseReference!
-    var imagePicked: UIImageView?
+    var imagePicked: UIImageView!
+    var profileButton: UIButton!
+    var jobButton: UIButton!
+    var imagePicker: UIImagePickerController!
+    var imageForProfile = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +53,9 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         jobTitleTextView = UITextView()
         editButton = UIBarButtonItem()
         menuButton = UIBarButtonItem()
+        profileButton = UIButton()
+        jobButton = UIButton()
+        imagePicked = UIImageView()
 
         profileImageView.translatesAutoresizingMaskIntoConstraints = false
         nameTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -56,6 +63,8 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         phoneTextView.translatesAutoresizingMaskIntoConstraints = false
         companyImageView.translatesAutoresizingMaskIntoConstraints = false
         jobTitleTextView.translatesAutoresizingMaskIntoConstraints = false
+        profileButton.translatesAutoresizingMaskIntoConstraints = false
+        jobButton.translatesAutoresizingMaskIntoConstraints = false
         
         nameTextView.isEditable = false
         emailTextView.isEditable = false
@@ -102,12 +111,28 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
         SideMenuManager.default.menuLeftNavigationController = menuLeftNavigationController
         SideMenuManager.default.menuFadeStatusBar = false
         
+        profileButton.isHidden = true
+        jobButton.isHidden = true
+        
+        profileButton.setTitle("Upload Profile Image", for: .normal)
+        jobButton.setTitle("Upload Company Image", for: .normal)
+        
+        profileButton.setTitleColor(.blue, for: .normal)
+        jobButton.setTitleColor(.blue, for: .normal)
+        profileButton.contentHorizontalAlignment = .center
+        jobButton.contentHorizontalAlignment = .center
+        
+        profileButton.addTarget(self, action: #selector(changeProfileImage), for: .touchUpInside)
+        jobButton.addTarget(self, action: #selector(changeCompanyImage), for: .touchUpInside)
+        
         view.addSubview(profileImageView)
         view.addSubview(nameTextView)
         view.addSubview(emailTextView)
         view.addSubview(phoneTextView)
         view.addSubview(companyImageView)
         view.addSubview(jobTitleTextView)
+        view.addSubview(jobButton)
+        view.addSubview(profileButton)
         
         setupConstraints()
     }
@@ -128,7 +153,7 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            profileImageView.topAnchor.constraint(equalTo: profileButton.bottomAnchor, constant: 32),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: view.frame.width/3),
             profileImageView.heightAnchor.constraint(equalToConstant: view.frame.width/3)
@@ -152,7 +177,7 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             phoneTextView.heightAnchor.constraint(equalToConstant: 24)
             ])
         NSLayoutConstraint.activate([
-            companyImageView.topAnchor.constraint(equalTo: phoneTextView.bottomAnchor, constant: 32),
+            companyImageView.topAnchor.constraint(equalTo: jobButton.bottomAnchor, constant: 32),
             companyImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             companyImageView.widthAnchor.constraint(equalToConstant: view.frame.width/5),
             companyImageView.heightAnchor.constraint(equalToConstant: view.frame.width/5)
@@ -163,6 +188,18 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             jobTitleTextView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             jobTitleTextView.heightAnchor.constraint(equalToConstant: 24)
             ])
+        NSLayoutConstraint.activate([
+            jobButton.topAnchor.constraint(equalTo: phoneTextView.bottomAnchor, constant: 32),
+            jobButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            jobButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            jobButton.heightAnchor.constraint(equalToConstant: 24)
+            ])
+        NSLayoutConstraint.activate([
+            profileButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 32),
+            profileButton.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            profileButton.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            profileButton.heightAnchor.constraint(equalToConstant: 24)
+            ])
     }
     
     @objc func toggleMenu(){
@@ -172,14 +209,20 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
     @objc func editOrSave() {
         currentlyEditing.toggle()
         if editButton.title == "Edit"{
+            editButton.style = .done
             editButton.title = "Save"
+            profileButton.isHidden = false
+            jobButton.isHidden = false
         }
         else {
             editButton.title = "Edit"
+            editButton.style = .plain
             jobTitleTextView.isEditable = false
             nameTextView.isEditable = false
             emailTextView.isEditable = false
             phoneTextView.isEditable = false
+            profileButton.isHidden = true
+            jobButton.isHidden = true
         }
         if currentlyEditing {
             jobTitleTextView.isEditable = true
@@ -205,7 +248,36 @@ class MainViewController: UIViewController, UIImagePickerControllerDelegate, UIN
             print(error.localizedDescription)
         }
     }
-
+    
+    func openPhotoLibraryButton() {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = .photoLibrary;
+            imagePicker.allowsEditing = true
+            imagePicker.mediaTypes = ["public.image"]
+            self.present(imagePicker, animated: true, completion: nil)
+        }
+    }
+    
+    @objc func changeProfileImage() {
+        imageForProfile = true
+        openPhotoLibraryButton()
+    }
+    
+    @objc func changeCompanyImage() {
+        imageForProfile = false
+        openPhotoLibraryButton()
+    }
+    
+    func changeImage() {
+        if imageForProfile {
+            profileImageView.image = imagePicked.image
+        }
+        else {
+            companyImageView.image = imagePicked.image
+        }
+    }
 }
 
 extension MainViewController: passUserDelegate {
@@ -214,5 +286,17 @@ extension MainViewController: passUserDelegate {
         //Will eventually have to edit text fields and images here
         //Check if the database entry is true, if so keep default values
         //If not then get the data from Firebase and populate fields
+    }
+}
+
+extension MainViewController: UIImagePickerControllerDelegate {
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
+        guard let image = info[.editedImage] as? UIImage else {
+            dismiss(animated:true, completion: nil)
+            return
+        }
+        imagePicked.image = image
+        dismiss(animated:true, completion: nil)
+        changeImage()
     }
 }
