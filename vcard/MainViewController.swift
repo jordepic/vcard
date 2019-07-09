@@ -16,7 +16,7 @@ protocol passUserDelegate: class {
     func passUser(id: String)
 }
 
-class MainViewController: UIViewController {
+class MainViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var uid: String!
     
@@ -31,6 +31,7 @@ class MainViewController: UIViewController {
     var currentlyEditing = false
     var handle: AuthStateDidChangeListenerHandle?
     var ref: DatabaseReference!
+    var imagePicked: UIImageView?
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -85,24 +85,24 @@ extension SideViewController: UITableViewDelegate {
         
         dismiss(animated: true, completion: nil)
         if cell.textView.text == "My Card" {
-            self.navigationController?.popToRootViewController(animated: false)
-            self.navigationController?.pushViewController(mainViewController, animated: true)
+            navigationController?.popToRootViewController(animated: false)
+            navigationController?.pushViewController(mainViewController, animated: true)
         }
         else if cell.textView.text == "My Code" {
-            self.navigationController?.popToRootViewController(animated: false)
-            self.navigationController?.pushViewController(qrViewController, animated: true)
+            navigationController?.popToRootViewController(animated: false)
+            navigationController?.pushViewController(qrViewController, animated: true)
         }
         else if cell.textView.text == "Scan Code" {
-            self.navigationController?.popToRootViewController(animated: false)
-            self.navigationController?.pushViewController(scanViewController, animated: true)
+            navigationController?.popToRootViewController(animated: false)
+            navigationController?.pushViewController(scanViewController, animated: true)
         }
         else if cell.textView.text == "Contacts" {
-            self.navigationController?.popToRootViewController(animated: false)
-            self.navigationController?.pushViewController(contactsViewController, animated: true)
+            navigationController?.popToRootViewController(animated: false)
+            navigationController?.pushViewController(contactsViewController, animated: true)
         }
         else if cell.textView.text == "Log Out" {
             signOut()
-            self.navigationController?.popToRootViewController(animated: false)
+            navigationController?.popToRootViewController(animated: false)
         }
         
         
