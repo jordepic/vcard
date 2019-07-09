@@ -144,7 +144,6 @@ class AuthenticationViewController: UIViewController {
                 else {
                     self!.loginButton.backgroundColor = .white
                     self!.errorLabel.text = ""
-                    //Bring up New View
                     self!.presentMainView(id: (user?.user.uid)!)
                 }
             }

@@ -78,29 +78,31 @@ extension SideViewController: UITableViewDelegate {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = sideTableView.cellForRow(at: indexPath) as! SideTableViewCell
-        let top = topMostController()
         let qrViewController = QRViewController()
-//        let mainViewController = MainViewController()
-        let authViewController = AuthenticationViewController()
-//        let contactsViewController = ContactsViewController()
-//        let scanViewController = ScanViewController()
+        let mainViewController = MainViewController()
+        let contactsViewController = ContactsViewController()
+        let scanViewController = ScanViewController()
         
-        
+        dismiss(animated: true, completion: nil)
         if cell.textView.text == "My Card" {
-
+            self.navigationController?.popToRootViewController(animated: false)
+            self.navigationController?.pushViewController(mainViewController, animated: true)
         }
         else if cell.textView.text == "My Code" {
+            self.navigationController?.popToRootViewController(animated: false)
             self.navigationController?.pushViewController(qrViewController, animated: true)
         }
         else if cell.textView.text == "Scan Code" {
-
+            self.navigationController?.popToRootViewController(animated: false)
+            self.navigationController?.pushViewController(scanViewController, animated: true)
         }
         else if cell.textView.text == "Contacts" {
-
+            self.navigationController?.popToRootViewController(animated: false)
+            self.navigationController?.pushViewController(contactsViewController, animated: true)
         }
         else if cell.textView.text == "Log Out" {
             signOut()
-            top.present(authViewController, animated: true, completion: nil)
+            self.navigationController?.popToRootViewController(animated: false)
         }
         
         

@@ -33,7 +33,6 @@ class QRViewController: UIViewController {
         
         qr = UIImageView()
         qr.translatesAutoresizingMaskIntoConstraints = false
-        print(uid!)
         if let image = generateQRCode(from: uid){
             qr.image = image
         }
