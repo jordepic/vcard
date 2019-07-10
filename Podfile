@@ -10,6 +10,7 @@ target 'vcard' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
+  pod 'Firebase/Storage'
   pod 'SideMenu'
 
 end

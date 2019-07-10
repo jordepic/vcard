@@ -11,6 +11,7 @@ import FirebaseDatabase
 import Firebase
 import FirebaseAuth
 import SideMenu
+import FirebaseStorage
 
 protocol passUserDelegate: class {
     func passUser(id: String)
@@ -36,6 +37,7 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
     var jobButton: UIButton!
     var imagePicker: UIImagePickerController!
     var imageForProfile = false
+    var storageRef = Storage.storage().reference()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -231,8 +233,28 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
             phoneTextView.isEditable = true
         }
         else {
-            self.ref.child("users/\(uid!)").setValue(["Name": nameTextView.text, "Email": emailTextView.text, "Phone": phoneTextView.text, "Job Description": jobTitleTextView.text])
+            uploadInfo()
             retrieveInfo()
+        }
+    }
+    
+    func uploadInfo() {
+        self.ref.child("users/\(uid!)").setValue(["Name": nameTextView.text, "Email": emailTextView.text, "Phone": phoneTextView.text, "Job Description": jobTitleTextView.text])
+        let profileData = profileImageView.image?.jpegData(compressionQuality: 1)
+        let companyData = companyImageView.image?.jpegData(compressionQuality: 1)
+        let profileRef = storageRef.child("\(uid!)/profile.jpg")
+        let companyRef = storageRef.child("\(uid!)/company.jpg")
+        
+        _ = profileRef.putData(profileData!, metadata: nil) { (metadata, error) in
+            guard metadata != nil else {
+                return
+            }
+        }
+        
+        _ = companyRef.putData(companyData!, metadata: nil) { (metadata, error) in
+            guard metadata != nil else {
+                return
+            }
         }
     }
     
@@ -247,6 +269,25 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
         }) { (error) in
             print(error.localizedDescription)
         }
+        let profileRef = storageRef.child("\(self.uid!)/profile.jpg")
+        let companyRef = storageRef.child("\(self.uid!)/company.jpg")
+        
+        profileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if error != nil {
+                // Uh-oh, an error occurred!
+            } else {
+                self.profileImageView.image = UIImage(data: data!)
+            }
+        }
+        
+        companyRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+            if error != nil {
+                // Uh-oh, an error occurred!
+            } else {
+                self.companyImageView.image = UIImage(data: data!)
+            }
+        }
+        
     }
     
     func openPhotoLibraryButton() {
@@ -272,10 +313,10 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
     
     func changeImage() {
         if imageForProfile {
-            profileImageView.image = imagePicked.image
+            self.profileImageView.image = imagePicked.image
         }
         else {
-            companyImageView.image = imagePicked.image
+            self.companyImageView.image = imagePicked.image
         }
     }
 }

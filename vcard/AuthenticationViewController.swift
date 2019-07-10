@@ -10,6 +10,7 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseDatabase
+import FirebaseStorage
 
 class AuthenticationViewController: UIViewController {
     
@@ -20,6 +21,7 @@ class AuthenticationViewController: UIViewController {
     var errorLabel: UILabel!
     var ref: DatabaseReference!
     weak var delegate: passUserDelegate?
+    var storageRef = Storage.storage().reference()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,8 +113,7 @@ class AuthenticationViewController: UIViewController {
         if emailTextField.text != "", passwordTextField.text != "" {
             Auth.auth().createUser(withEmail: emailTextField.text!, password: passwordTextField.text!) { authResult, error in
                 if let user = authResult?.user {
-                    self.ref.child("users/\(user.uid)").setValue(["Name": "Name", "Email": "Email", "Phone": "Phone", "Job Description": "Job Description"])
-                    self.ref.child("contacts/\(user.uid)").setValue(true)
+                    self.firstUpload(user: user)
                 }
                 if error != nil{
                     self.registerButton.backgroundColor = .lightGray
@@ -159,6 +160,31 @@ class AuthenticationViewController: UIViewController {
         delegate = mainViewController
         dismiss(animated: true, completion: nil)
         delegate?.passUser(id: id)
+    }
+    
+    func firstUpload(user: User) {
+        self.ref.child("users/\(user.uid)").setValue(["Name": "Name", "Email": "Email", "Phone": "Phone", "Job Description": "Job Description"])
+        self.ref.child("contacts/\(user.uid)").setValue(true)
+        
+        let profileImage = UIImage(named: "default")
+        let companyImage = UIImage(named: "company")
+        
+        let profileData = profileImage!.jpegData(compressionQuality: 1)
+        let companyData = companyImage!.jpegData(compressionQuality: 1)
+        let profileRef = storageRef.child("\(user.uid)/profile.jpg")
+        let companyRef = storageRef.child("\(user.uid)/company.jpg")
+        
+        _ = profileRef.putData(profileData!, metadata: nil) { (metadata, error) in
+            guard metadata != nil else {
+                return
+            }
+        }
+        
+        _ = companyRef.putData(companyData!, metadata: nil) { (metadata, error) in
+            guard metadata != nil else {
+                return
+            }
+        }
     }
 }
 
