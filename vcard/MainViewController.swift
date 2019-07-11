@@ -29,6 +29,7 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
     var jobTitleTextView: UITextView!
     var editButton: UIBarButtonItem!
     var menuButton: UIBarButtonItem!
+    var cancelButton: UIBarButtonItem!
     var currentlyEditing = false
     var handle: AuthStateDidChangeListenerHandle?
     var ref: DatabaseReference!
@@ -98,6 +99,12 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
         editButton.style = .plain
         self.navigationItem.rightBarButtonItem = editButton
         
+        cancelButton = UIBarButtonItem()
+        cancelButton.title = "Cancel"
+        cancelButton.target = self
+        cancelButton.action = #selector(cancelChanges)
+        cancelButton.style = .plain
+        
         menuButton.target = self
         menuButton.action = #selector(toggleMenu)
         //menuButton.image = UIImage(named: "menu")
@@ -143,8 +150,10 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
         super.viewWillAppear(animated)
         handle = Auth.auth().addStateDidChangeListener { (auth, user) in
             if let user = user {
-                self.uid = user.uid
-                self.retrieveInfo()
+                if user.uid != self.uid {
+                    self.uid = user.uid
+                    self.retrieveInfo()
+                }
             }
             else {
                 let authenticationViewController = AuthenticationViewController()
@@ -210,32 +219,50 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
     
     @objc func editOrSave() {
         currentlyEditing.toggle()
-        if editButton.title == "Edit"{
-            editButton.style = .done
-            editButton.title = "Save"
-            profileButton.isHidden = false
-            jobButton.isHidden = false
-        }
-        else {
-            editButton.title = "Edit"
-            editButton.style = .plain
-            jobTitleTextView.isEditable = false
-            nameTextView.isEditable = false
-            emailTextView.isEditable = false
-            phoneTextView.isEditable = false
-            profileButton.isHidden = true
-            jobButton.isHidden = true
-        }
         if currentlyEditing {
-            jobTitleTextView.isEditable = true
-            nameTextView.isEditable = true
-            emailTextView.isEditable = true
-            phoneTextView.isEditable = true
+            editSettings()
         }
         else {
+            staticSettings()
             uploadInfo()
-            retrieveInfo()
         }
+    }
+    
+    @objc func cancelChanges(){
+        retrieveInfo()
+        editButton.title = "Edit"
+        editButton.style = .plain
+        jobTitleTextView.isEditable = false
+        nameTextView.isEditable = false
+        emailTextView.isEditable = false
+        phoneTextView.isEditable = false
+        profileButton.isHidden = true
+        jobButton.isHidden = true
+        self.navigationItem.leftBarButtonItem = menuButton
+    }
+    
+    func editSettings() {
+        editButton.style = .done
+        editButton.title = "Save"
+        profileButton.isHidden = false
+        jobButton.isHidden = false
+        self.navigationItem.leftBarButtonItem = cancelButton
+        jobTitleTextView.isEditable = true
+        nameTextView.isEditable = true
+        emailTextView.isEditable = true
+        phoneTextView.isEditable = true
+    }
+    
+    func staticSettings() {
+        editButton.title = "Edit"
+        editButton.style = .plain
+        jobTitleTextView.isEditable = false
+        nameTextView.isEditable = false
+        emailTextView.isEditable = false
+        phoneTextView.isEditable = false
+        profileButton.isHidden = true
+        jobButton.isHidden = true
+        self.navigationItem.leftBarButtonItem = menuButton
     }
     
     func uploadInfo() {
@@ -272,7 +299,7 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
         let profileRef = storageRef.child("\(self.uid!)/profile.jpg")
         let companyRef = storageRef.child("\(self.uid!)/company.jpg")
         
-        profileRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        profileRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
             if error != nil {
                 // Uh-oh, an error occurred!
             } else {
@@ -280,7 +307,7 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
             }
         }
         
-        companyRef.getData(maxSize: 1 * 1024 * 1024) { data, error in
+        companyRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
             if error != nil {
                 // Uh-oh, an error occurred!
             } else {
@@ -323,7 +350,7 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
 
 extension MainViewController: passUserDelegate {
     func passUser(id: String) {
-        uid = id
+        //uid = id
         //Will eventually have to edit text fields and images here
         //Check if the database entry is true, if so keep default values
         //If not then get the data from Firebase and populate fields
