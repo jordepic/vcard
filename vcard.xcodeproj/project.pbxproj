@@ -14,6 +14,7 @@
 		DA8672D222D25370003A3C45 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8672D122D25370003A3C45 /* ScanViewController.swift */; };
 		DA8672D422D2538A003A3C45 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8672D322D2538A003A3C45 /* ContactsViewController.swift */; };
 		DA89BB0522D118BD0029C4FF /* SideViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA89BB0422D118BD0029C4FF /* SideViewController.swift */; };
+		DA8D2A8122E54819002A3A64 /* OtherUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8D2A8022E54819002A3A64 /* OtherUserViewController.swift */; };
 		DAAE8FC622D1533C000B408F /* SideTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAE8FC522D1533C000B408F /* SideTableViewCell.swift */; };
 		DAAF1A6A22CD1DC600EA39CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAF1A6922CD1DC600EA39CA /* AppDelegate.swift */; };
 		DAAF1A6C22CD1DC600EA39CA /* AuthenticationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAAF1A6B22CD1DC600EA39CA /* AuthenticationViewController.swift */; };
@@ -34,6 +35,7 @@
 		DA8672D122D25370003A3C45 /* ScanViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanViewController.swift; sourceTree = "<group>"; };
 		DA8672D322D2538A003A3C45 /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		DA89BB0422D118BD0029C4FF /* SideViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideViewController.swift; sourceTree = "<group>"; };
+		DA8D2A8022E54819002A3A64 /* OtherUserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherUserViewController.swift; sourceTree = "<group>"; };
 		DAAE8FC522D1533C000B408F /* SideTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideTableViewCell.swift; sourceTree = "<group>"; };
 		DAAF1A6622CD1DC600EA39CA /* vcard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = vcard.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAF1A6922CD1DC600EA39CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				DA8672CF22D2534F003A3C45 /* QRViewController.swift */,
 				DA8672D122D25370003A3C45 /* ScanViewController.swift */,
 				DA8672D322D2538A003A3C45 /* ContactsViewController.swift */,
+				DA8D2A8022E54819002A3A64 /* OtherUserViewController.swift */,
 				DA4762EE22E4F07400CCE176 /* ContactTableViewCell.swift */,
 				DA89BB0422D118BD0029C4FF /* SideViewController.swift */,
 				DAAE8FC522D1533C000B408F /* SideTableViewCell.swift */,
@@ -234,6 +237,7 @@
 				DAAE8FC622D1533C000B408F /* SideTableViewCell.swift in Sources */,
 				DA8672D222D25370003A3C45 /* ScanViewController.swift in Sources */,
 				DA4762F122E4F3EC00CCE176 /* Contact.swift in Sources */,
+				DA8D2A8122E54819002A3A64 /* OtherUserViewController.swift in Sources */,
 				DAB9E04022CE56FF0045D9CA /* MainViewController.swift in Sources */,
 				DAAF1A6C22CD1DC600EA39CA /* AuthenticationViewController.swift in Sources */,
 				DAAF1A6A22CD1DC600EA39CA /* AppDelegate.swift in Sources */,

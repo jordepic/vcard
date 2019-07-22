@@ -22,6 +22,7 @@ class ContactsViewController: UIViewController {
     var uidArray: [String]!
     var contacts: [Contact]!
     var reuseIdentifier = "contact"
+    weak var delegate: passContactDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,7 +103,6 @@ extension ContactsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = contactsTableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ContactTableViewCell
         let contact = contacts[indexPath.row]
-        print(contact.name)
         cell.configure(contact: contact)
         return cell
     }
@@ -114,6 +114,10 @@ extension ContactsViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    
+        let cardViewController = OtherUserViewController()
+        delegate = cardViewController
+        let contact = contacts[indexPath.row]
+        delegate?.passContact(id: contact.uid)
+        navigationController?.pushViewController(cardViewController, animated: true)
     }
 }

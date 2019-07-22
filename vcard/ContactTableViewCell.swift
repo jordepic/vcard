@@ -17,6 +17,7 @@ class ContactTableViewCell: UITableViewCell {
         
         nameTextView = UITextView()
         nameTextView.translatesAutoresizingMaskIntoConstraints = false
+        nameTextView.isEditable = false
         contentView.addSubview(nameTextView)
         
         setupConstraints()

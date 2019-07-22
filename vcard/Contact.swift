@@ -22,7 +22,6 @@ class Contact {
         
         ref.child("users").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
             // Get user value
-            print(snapshot.value)
             let value = snapshot.value as? NSDictionary
             self.name = (value?["Name"] as? String ?? "")
         }) { (error) in

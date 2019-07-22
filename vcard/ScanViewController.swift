@@ -102,7 +102,7 @@ class ScanViewController: UIViewController, AVCaptureMetadataOutputObjectsDelega
         if let uid = uid{
             ref.child("contacts").child(uid).observeSingleEvent(of: .value, with: { (snapshot) in
                 // Get user value
-                var value = snapshot.value as? [String] ?? []
+                var value = snapshot.value as? NSArray as? [String] ?? []
                 value.append(code)
                 self.ref.child("contacts/\(uid)").setValue(value)
             }) { (error) in
