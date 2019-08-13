@@ -66,6 +66,8 @@ class OtherUserViewController: UIViewController {
         phoneTextView.textAlignment = .center
         jobTitleTextView.textAlignment = .center
         
+        nameTextView.text = "HELLO"
+        
         view.addSubview(profileImageView)
         view.addSubview(nameTextView)
         view.addSubview(emailTextView)
@@ -83,7 +85,7 @@ class OtherUserViewController: UIViewController {
     
     func setupConstraints() {
         NSLayoutConstraint.activate([
-            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 88),
+            profileImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 88),
             profileImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             profileImageView.widthAnchor.constraint(equalToConstant: view.frame.width/3),
             profileImageView.heightAnchor.constraint(equalToConstant: view.frame.width/3)
@@ -122,34 +124,32 @@ class OtherUserViewController: UIViewController {
     
     func retrieveInfo() {
         ref.child("users").child(uid!).observeSingleEvent(of: .value, with: { (snapshot) in
-            // Get user value
             let value = snapshot.value as? NSDictionary
             self.nameTextView.text = (value?["Name"] as? String ?? "")
             self.emailTextView.text = (value?["Email"] as? String ?? "")
             self.jobTitleTextView.text = (value?["Job Description"] as? String ?? "")
             self.phoneTextView.text = (value?["Phone"] as? String ?? "")
+            let profileRef = self.storageRef.child("\(self.uid!)/profile.jpg")
+            let companyRef = self.storageRef.child("\(self.uid!)/company.jpg")
+
+            profileRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
+                if error != nil {
+                    // Uh-oh, an error occurred!
+                } else {
+                    self.profileImageView.image = UIImage(data: data!)
+                    companyRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
+                        if error != nil {
+                            // Uh-oh, an error occurred!
+                        } else {
+                            self.companyImageView.image = UIImage(data: data!)
+                        }
+                    }
+                }
+            }
+
         }) { (error) in
             print(error.localizedDescription)
         }
-        let profileRef = storageRef.child("\(self.uid!)/profile.jpg")
-        let companyRef = storageRef.child("\(self.uid!)/company.jpg")
-        
-        profileRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
-            if error != nil {
-                // Uh-oh, an error occurred!
-            } else {
-                self.profileImageView.image = UIImage(data: data!)
-            }
-        }
-        
-        companyRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
-            if error != nil {
-                // Uh-oh, an error occurred!
-            } else {
-                self.companyImageView.image = UIImage(data: data!)
-            }
-        }
-        
     }
     
 

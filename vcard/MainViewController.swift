@@ -293,28 +293,27 @@ class MainViewController: UIViewController, UINavigationControllerDelegate {
             self.emailTextView.text = (value?["Email"] as? String ?? "")
             self.jobTitleTextView.text = (value?["Job Description"] as? String ?? "")
             self.phoneTextView.text = (value?["Phone"] as? String ?? "")
+            
+            let profileRef = self.storageRef.child("\(self.uid!)/profile.jpg")
+            let companyRef = self.storageRef.child("\(self.uid!)/company.jpg")
+            
+            profileRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
+                if error != nil {
+                    // Uh-oh, an error occurred!
+                } else {
+                    self.profileImageView.image = UIImage(data: data!)
+                    companyRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
+                        if error != nil {
+                            // Uh-oh, an error occurred!
+                        } else {
+                            self.companyImageView.image = UIImage(data: data!)
+                        }
+                    }
+                }
+            }
         }) { (error) in
             print(error.localizedDescription)
         }
-        let profileRef = storageRef.child("\(self.uid!)/profile.jpg")
-        let companyRef = storageRef.child("\(self.uid!)/company.jpg")
-        
-        profileRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
-            if error != nil {
-                // Uh-oh, an error occurred!
-            } else {
-                self.profileImageView.image = UIImage(data: data!)
-            }
-        }
-        
-        companyRef.getData(maxSize: 2 * 1024 * 1024) { data, error in
-            if error != nil {
-                // Uh-oh, an error occurred!
-            } else {
-                self.companyImageView.image = UIImage(data: data!)
-            }
-        }
-        
     }
     
     func openPhotoLibraryButton() {
