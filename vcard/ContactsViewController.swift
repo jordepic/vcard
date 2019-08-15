@@ -12,17 +12,19 @@ import Firebase
 import FirebaseDatabase
 import SideMenu
 
-class ContactsViewController: UIViewController {
+class ContactsViewController: UIViewController, UISearchBarDelegate {
 
     var uid: String!
     var menuButton: UIBarButtonItem!
-    var searchTextField: UITextField!
+    var searchTextField: UISearchBar!
     var contactsTableView: UITableView!
     var ref: DatabaseReference!
     var uidArray: [String]!
     var contacts: [Contact]!
+    var modifiedContacts: [Contact]!
     var reuseIdentifier = "contact"
     weak var delegate: passContactDelegate?
+    var isSearching = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,10 +45,11 @@ class ContactsViewController: UIViewController {
         menuButton.title = "Menu"
         self.navigationItem.leftBarButtonItem = menuButton
         
-        searchTextField = UITextField()
+        searchTextField = UISearchBar()
         searchTextField.translatesAutoresizingMaskIntoConstraints = false
-        searchTextField.borderStyle = .roundedRect
         searchTextField.placeholder = "Search"
+        searchTextField.delegate = self
+        searchTextField.returnKeyType = UIReturnKeyType.done
         view.addSubview(searchTextField)
         
         contactsTableView = UITableView()
@@ -93,16 +96,37 @@ class ContactsViewController: UIViewController {
         present(SideMenuManager.default.menuLeftNavigationController!, animated: true, completion: nil)
     }
     
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText == "" {
+            isEditing = false
+            view.endEditing(true)
+            contactsTableView.reloadData()
+        }else {
+            isEditing = true
+            modifiedContacts = contacts.filter({$0.name.contains(searchText)})
+            contactsTableView.reloadData()
+        }
+    }
+    
 }
 
 extension ContactsViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if isEditing {
+            return modifiedContacts.count
+        }
         return contacts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = contactsTableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! ContactTableViewCell
-        let contact = contacts[indexPath.row]
+        let contact: Contact!
+        if isEditing {
+            contact = modifiedContacts[indexPath.row]
+        }
+        else {
+            contact = contacts[indexPath.row]
+        }
         cell.configure(contact: contact)
         return cell
     }
@@ -116,7 +140,13 @@ extension ContactsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cardViewController = OtherUserViewController()
         delegate = cardViewController
-        let contact = contacts[indexPath.row]
+        let contact: Contact!
+        if isEditing {
+            contact = modifiedContacts[indexPath.row]
+        }
+        else {
+            contact = contacts[indexPath.row]
+        }
         delegate?.passContact(id: contact.uid)
         navigationController?.pushViewController(cardViewController, animated: true)
     }
